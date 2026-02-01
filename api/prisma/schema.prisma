@@ -1,0 +1,37 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Board {
+  id    String @id @default(uuid())
+  name  String
+  cards Card[]
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+}
+
+model Card {
+  id          String  @id @default(uuid())
+  title       String
+  description String?
+  order       Float   @default(0)
+  column      Column  @default(TODO)
+
+  boardId String
+  board   Board  @relation(fields: [boardId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+}
+
+enum Column {
+  TODO
+  IN_PROGRESS
+  DONE
+}
