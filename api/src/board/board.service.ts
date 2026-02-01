@@ -11,7 +11,9 @@ export class BoardService {
     return this.prisma.board.findUniqueOrThrow({
       where: { id },
       include: {
-        cards: true,
+        cards: {
+          orderBy: { order: 'asc' },
+        },
       },
     });
   }
