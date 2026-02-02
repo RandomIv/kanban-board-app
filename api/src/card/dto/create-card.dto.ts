@@ -1,17 +1,7 @@
-import {
-  IsEnum,
-  IsNotEmpty,
-  IsNumber,
-  IsOptional,
-  IsString,
-} from 'class-validator';
+import { IsEnum, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 import { Column } from '../../generated/prisma/enums';
 
 export class CreateCardDto {
-  @IsNotEmpty()
-  @IsNumber()
-  order: number;
-
   @IsNotEmpty()
   @IsString()
   title: string;
