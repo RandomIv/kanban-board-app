@@ -1,6 +1,6 @@
 import { CardTypes } from './card.types';
 
-export type Board = {
+export type BoardType = {
   id: string;
   name: string;
   cards: CardTypes[];
