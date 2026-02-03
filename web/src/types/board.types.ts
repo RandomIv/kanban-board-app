@@ -1,9 +1,9 @@
-import { CardTypes } from './card.types';
+import { CardType } from './card.types';
 
 export type BoardType = {
   id: string;
   name: string;
-  cards: CardTypes[];
+  cards: CardType[];
   createdAt: string;
   updatedAt: string;
 };
