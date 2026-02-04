@@ -20,7 +20,7 @@ interface DeleteBoardAlertProps {
   children: React.ReactNode;
 }
 
-export function DeleteBoardAlert({
+export function BoardDeleteAlert({
   onConfirm,
   children,
 }: DeleteBoardAlertProps) {

@@ -3,12 +3,15 @@ import { Button } from '@/components/ui/button';
 import { Plus } from 'lucide-react';
 import { TaskCard } from './task-card';
 import { CardType, Column } from '@/types/card.types';
-import React from 'react';
+import React, { useState } from 'react';
+import { TaskDialog } from '@/app/(workspace)/board/[boardId]/_components/task-dialog';
+import { useCreateCard } from '@/hooks/use-card';
 
 interface BoardColumnProps {
   id: Column;
   title: string;
-  cards?: CardType[];
+  cards: CardType[];
+  boardId: string;
 }
 
 const COLOR_MAP: Record<Column, string> = {
@@ -17,7 +20,23 @@ const COLOR_MAP: Record<Column, string> = {
   DONE: 'chart-2',
 };
 
-export function BoardColumn({ id, title, cards = [] }: BoardColumnProps) {
+export function BoardColumn({
+  id,
+  title,
+  cards = [],
+  boardId,
+}: BoardColumnProps) {
+  const [isCreateOpen, setIsCreateOpen] = useState(false);
+  const createCardMutation = useCreateCard();
+
+  const handleCreate = (data: { title: string; description?: string }) => {
+    createCardMutation.mutate({
+      ...data,
+      column: id,
+      boardId: boardId,
+    });
+    setIsCreateOpen(false);
+  };
   const colorVar = `var(--${COLOR_MAP[id]})`;
 
   return (
@@ -37,22 +56,30 @@ export function BoardColumn({ id, title, cards = [] }: BoardColumnProps) {
 
       <div className="pointer-events-none absolute inset-x-0 top-0 h-28 rounded-t-xl bg-linear-to-b from-(--col) to-transparent opacity-10" />
 
-      <div className="relative z-10 flex flex-1 flex-col gap-6">
-        <ScrollArea className="flex-1">
-          <div className="flex flex-col gap-4 pt-4">
-            {cards.map((c, i) => (
-              <TaskCard key={i} card={c} />
-            ))}
-          </div>
-        </ScrollArea>
+      <div className="relative flex flex-1 flex-col gap-6 overflow-hidden">
+        <div className="flex-1 -mx-6 px-6 overflow-hidden">
+          <ScrollArea className="h-full">
+            <div className="flex flex-col gap-4 py-2 ">
+              {cards.map((c, i) => (
+                <TaskCard key={i} card={c} />
+              ))}
+            </div>
+          </ScrollArea>
+        </div>
 
         <Button
           variant="ghost"
           className="h-14 w-full border-2 border-dashed border-(--col)/40 bg-transparent text-base text-muted-foreground hover:border-(--col) hover:bg-(--col)/10 hover:text-(--col) hover:cursor-pointer"
+          onClick={() => setIsCreateOpen(true)}
         >
           <Plus className="mr-2 h-5 w-5" /> Add Task
         </Button>
       </div>
+      <TaskDialog
+        isOpen={isCreateOpen}
+        onClose={() => setIsCreateOpen(false)}
+        onSubmit={handleCreate}
+      />
     </div>
   );
 }
