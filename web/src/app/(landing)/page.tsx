@@ -6,14 +6,23 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card } from '@/components/ui/card';
 import { Kanban, ArrowRight, Plus } from 'lucide-react';
+import { useCreateBoard } from '@/hooks/use-board';
 
 export default function Home() {
   const router = useRouter();
   const [boardId, setBoardId] = useState('');
+  const createBoardMutation = useCreateBoard();
 
   const handleCreateNewBoard = () => {
-    const newBoardId = `board-${Date.now()}`;
-    router.push(`/board/${newBoardId}`);
+    const boardName = `Board ${Date.now()}`;
+    createBoardMutation.mutate(
+      { name: boardName },
+      {
+        onSuccess: (data) => {
+          router.push(`/board/${data.id}`);
+        },
+      },
+    );
   };
 
   const handleOpenBoard = () => {

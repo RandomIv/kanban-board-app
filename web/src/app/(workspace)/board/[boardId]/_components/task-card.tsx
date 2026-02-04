@@ -2,18 +2,23 @@ import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Pencil, Trash2 } from 'lucide-react';
 import React from 'react';
+import { CardType } from '@/types/card.types';
 
 interface TaskCardProps {
-  title: string;
-  description?: string;
-  borderColor?: string;
+  card: CardType;
+  onEdit?: (card: CardType) => void;
+  onDelete?: (id: string) => void;
 }
 
-export function TaskCard({
-  title,
-  description,
-  borderColor = 'var(--primary)',
-}: TaskCardProps) {
+export function TaskCard({ card, onEdit, onDelete }: TaskCardProps) {
+  const borderColor = `var(--${
+    card.column === 'TODO'
+      ? 'chart-1'
+      : card.column === 'IN_PROGRESS'
+        ? 'chart-4'
+        : 'chart-2'
+  })`;
+
   return (
     <Card
       style={{ '--col': borderColor } as React.CSSProperties}
@@ -29,10 +34,10 @@ export function TaskCard({
 
       <div className="flex flex-col gap-2 pt-2">
         <h4 className="text-base font-semibold text-card-foreground leading-tight">
-          {title}
+          {card.title}
         </h4>
         <p className="text-sm text-muted-foreground line-clamp-3">
-          {description || 'No description provided...'}
+          {card.description || 'No description provided...'}
         </p>
       </div>
 
@@ -41,6 +46,7 @@ export function TaskCard({
           variant="ghost"
           size="icon"
           className="h-8 w-8 text-muted-foreground hover:text-primary"
+          onClick={() => onEdit?.(card)}
         >
           <Pencil className="h-4 w-4" />
         </Button>
@@ -48,6 +54,7 @@ export function TaskCard({
           variant="ghost"
           size="icon"
           className="h-8 w-8 text-muted-foreground hover:text-destructive"
+          onClick={() => onDelete?.(card.id)}
         >
           <Trash2 className="h-4 w-4" />
         </Button>

@@ -41,12 +41,7 @@ export function BoardColumn({ id, title, cards = [] }: BoardColumnProps) {
         <ScrollArea className="flex-1">
           <div className="flex flex-col gap-4 pt-4">
             {cards.map((c, i) => (
-              <TaskCard
-                key={i}
-                title={c.title}
-                description={c.description}
-                borderColor={colorVar}
-              />
+              <TaskCard key={i} card={c} />
             ))}
           </div>
         </ScrollArea>
