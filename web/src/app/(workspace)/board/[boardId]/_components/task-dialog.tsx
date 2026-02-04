@@ -20,17 +20,16 @@ import {
   FieldError,
   FieldGroup,
   FieldLabel,
-} from '@/components/ui/field'; // 👈 Твій шлях
+} from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
 import {
   InputGroup,
   InputGroupAddon,
   InputGroupText,
   InputGroupTextarea,
-} from '@/components/ui/input-group'; // 👈 Твій шлях
+} from '@/components/ui/input-group';
 import { CardType } from '@/types/card.types';
 
-// Схема валідації
 const formSchema = z.object({
   title: z.string().min(1, 'Title is required').max(100, 'Title is too long'),
   description: z
@@ -80,36 +79,48 @@ export function TaskDialog({
 
   const handleSubmit = (data: TaskFormValues) => {
     onSubmit(data);
+    form.reset();
   };
 
   const isEditing = !!initialData;
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-125">
-        <DialogHeader>
-          <DialogTitle>{isEditing ? 'Edit Task' : 'Create Task'}</DialogTitle>
-          <DialogDescription>
+      <DialogContent className="sm:max-w-135 border-border/50 bg-card shadow-xl">
+        <DialogHeader className="space-y-3 pb-2">
+          <DialogTitle className="text-2xl font-bold text-card-foreground">
+            {isEditing ? 'Edit Task' : 'Create New Task'}
+          </DialogTitle>
+          <DialogDescription className="text-base text-muted-foreground">
             {isEditing
-              ? 'Make changes to your task here.'
-              : 'Add a new task to your board.'}
+              ? 'Update the details of your task below.'
+              : 'Fill in the information to create a new task.'}
           </DialogDescription>
         </DialogHeader>
 
-        <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-6">
-          <FieldGroup>
+        <form
+          onSubmit={form.handleSubmit(handleSubmit)}
+          className="space-y-6 pt-2"
+        >
+          <FieldGroup className="gap-5">
             <Controller
               name="title"
               control={form.control}
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
-                  <FieldLabel htmlFor="task-title">Title</FieldLabel>
+                  <FieldLabel
+                    htmlFor="task-title"
+                    className="text-sm font-semibold text-card-foreground"
+                  >
+                    Task Title
+                  </FieldLabel>
                   <Input
                     {...field}
                     id="task-title"
-                    placeholder="Buy groceries..."
+                    placeholder="e.g., Review pull requests"
                     autoComplete="off"
                     aria-invalid={fieldState.invalid}
+                    className="h-11 text-base border-border/50 bg-background focus-visible:border-chart-1 focus-visible:ring-chart-1/30"
                   />
                   {fieldState.invalid && (
                     <FieldError
@@ -119,32 +130,37 @@ export function TaskDialog({
                 </Field>
               )}
             />
-
-            {/* DESCRIPTION FIELD */}
             <Controller
               name="description"
               control={form.control}
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
-                  <FieldLabel htmlFor="task-desc">Description</FieldLabel>
-                  <InputGroup>
+                  <FieldLabel
+                    htmlFor="task-desc"
+                    className="text-sm font-semibold text-card-foreground"
+                  >
+                    Description
+                  </FieldLabel>
+                  <InputGroup className="border-border/50 bg-background focus-within:border-chart-1 focus-within:ring-chart-1/30">
                     <InputGroupTextarea
                       {...field}
                       id="task-desc"
-                      placeholder="Add more details..."
-                      rows={4}
-                      className="resize-none"
+                      placeholder="Add any additional details..."
+                      rows={5}
+                      className="resize-none text-base"
                       aria-invalid={fieldState.invalid}
                     />
-                    <InputGroupAddon align="block-end">
-                      <InputGroupText className="tabular-nums">
-                        {/* Лічильник символів, як у твоєму прикладі */}
+                    <InputGroupAddon
+                      align="block-end"
+                      className="border-t border-border/30"
+                    >
+                      <InputGroupText className="tabular-nums text-xs font-medium text-muted-foreground">
                         {field.value?.length || 0}/500
                       </InputGroupText>
                     </InputGroupAddon>
                   </InputGroup>
-                  <FieldDescription>
-                    Optional details about this task.
+                  <FieldDescription className="text-xs text-muted-foreground/80">
+                    Provide optional details.
                   </FieldDescription>
                   {fieldState.invalid && (
                     <FieldError
@@ -156,11 +172,19 @@ export function TaskDialog({
             />
           </FieldGroup>
 
-          <DialogFooter>
-            <Button type="button" variant="outline" onClick={onClose}>
+          <DialogFooter className="gap-3 pt-4 border-t border-border/30">
+            <Button
+              type="button"
+              variant="outline"
+              onClick={onClose}
+              className="h-11 px-6 text-base font-semibold"
+            >
               Cancel
             </Button>
-            <Button type="submit">
+            <Button
+              type="submit"
+              className="h-11 px-6 text-base font-semibold bg-chart-1 hover:bg-chart-1/90 text-primary shadow-lg hover:shadow-xl transition-all"
+            >
               {isEditing ? 'Save Changes' : 'Create Task'}
             </Button>
           </DialogFooter>
