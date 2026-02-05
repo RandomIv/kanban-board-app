@@ -1,16 +1,16 @@
 import { client } from '@/utils/fetch-client';
-import { CardTypes, CreateCardDto, UpdateCardDto } from '@/types/card.types';
+import { CardType, CreateCardDto, UpdateCardDto } from '@/types/card.types';
 
 export const cardService = {
   create: (data: CreateCardDto) => {
-    return client<CardTypes>('/cards', {
+    return client<CardType>('/cards', {
       method: 'POST',
       body: JSON.stringify(data),
     });
   },
 
   update: (id: string, data: UpdateCardDto) => {
-    return client<CardTypes>(`/cards/${id}`, {
+    return client<CardType>(`/cards/${id}`, {
       method: 'PATCH',
       body: JSON.stringify(data),
     });

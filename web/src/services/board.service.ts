@@ -1,20 +1,20 @@
 import { client } from '@/utils/fetch-client';
-import { Board, CreateBoardDto, UpdateBoardDto } from '@/types/board.types';
+import { BoardType, CreateBoardDto, UpdateBoardDto } from '@/types/board.types';
 
 export const boardService = {
   getById: (id: string) => {
-    return client<Board>(`/boards/${id}`);
+    return client<BoardType>(`/boards/${id}`);
   },
 
   create: (data: CreateBoardDto) => {
-    return client<Board>('/boards', {
+    return client<BoardType>('/boards', {
       method: 'POST',
       body: JSON.stringify(data),
     });
   },
 
   update: (id: string, data: UpdateBoardDto) => {
-    return client<Board>(`/boards/${id}`, {
+    return client<BoardType>(`/boards/${id}`, {
       method: 'PATCH',
       body: JSON.stringify(data),
     });
