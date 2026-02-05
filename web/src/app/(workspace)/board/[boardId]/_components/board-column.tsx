@@ -9,7 +9,7 @@ import {
   SortableContext,
   verticalListSortingStrategy,
 } from '@dnd-kit/sortable';
-import { DraggableCard } from './draggable-card';
+import { TaskCardDraggable } from './task-card-draggable';
 
 interface BoardColumnProps {
   id: Column;
@@ -69,7 +69,7 @@ export function BoardColumn({ id, title, cards = [] }: BoardColumnProps) {
                 strategy={verticalListSortingStrategy}
               >
                 {cards.map((card) => (
-                  <DraggableCard key={card.id} card={card} />
+                  <TaskCardDraggable key={card.id} card={card} />
                 ))}
               </SortableContext>
             </div>

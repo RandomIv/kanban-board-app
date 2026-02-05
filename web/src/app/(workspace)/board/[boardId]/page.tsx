@@ -5,6 +5,9 @@ import { BoardHeader } from './_components/board-header';
 import { BoardTitle } from './_components/board-title';
 import { BoardCanvas } from './_components/board-canvas';
 import { useBoard } from '@/hooks/use-board';
+import { Button } from '@/components/ui/button';
+import { useRouter } from 'next/navigation';
+import { Home } from 'lucide-react';
 
 export default function BoardPage({
   params,
@@ -12,7 +15,7 @@ export default function BoardPage({
   params: Promise<{ boardId: string }>;
 }) {
   const { boardId: activeBoardId } = use(params);
-
+  const router = useRouter();
   const {
     data: board,
     error,
@@ -31,8 +34,19 @@ export default function BoardPage({
 
   if (isError || !board) {
     return (
-      <div className="flex h-screen items-center justify-center bg-background text-destructive text-4xl">
-        {error?.message || 'Failed to load board.'}
+      <div className="flex h-screen flex-col gap-6 items-center justify-center bg-background">
+        <div className="text-destructive text-4xl font-bold">
+          {error?.message || 'Failed to load board.'}
+        </div>
+        <Button
+          variant="outline"
+          size="lg"
+          onClick={() => router.push('/')}
+          className="gap-2"
+        >
+          <Home className="w-5 h-5" />
+          Go back home
+        </Button>
       </div>
     );
   }

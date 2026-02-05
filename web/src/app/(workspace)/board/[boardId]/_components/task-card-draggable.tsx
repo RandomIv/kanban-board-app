@@ -9,7 +9,7 @@ interface DraggableCardProps {
   card: CardType;
 }
 
-export function DraggableCard({ card }: DraggableCardProps) {
+export function TaskCardDraggable({ card }: DraggableCardProps) {
   const {
     attributes,
     listeners,
