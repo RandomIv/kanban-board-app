@@ -1,11 +1,16 @@
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Button } from '@/components/ui/button';
 import { Plus } from 'lucide-react';
-import { TaskCard } from './task-card';
 import { CardType, Column } from '@/types/card.types';
 import React, { useState } from 'react';
 import { TaskDialog } from '@/app/(workspace)/board/[boardId]/_components/task-dialog';
 import { useCreateCard } from '@/hooks/use-card';
+import { useDroppable } from '@dnd-kit/core';
+import {
+  SortableContext,
+  verticalListSortingStrategy,
+} from '@dnd-kit/sortable';
+import { DraggableCard } from './draggable-card';
 
 interface BoardColumnProps {
   id: Column;
@@ -29,6 +34,14 @@ export function BoardColumn({
   const [isCreateOpen, setIsCreateOpen] = useState(false);
   const createCardMutation = useCreateCard();
 
+  const { setNodeRef, isOver } = useDroppable({
+    id,
+    data: {
+      type: 'column',
+      columnId: id,
+    },
+  });
+
   const handleCreate = (data: { title: string; description?: string }) => {
     createCardMutation.mutate({
       ...data,
@@ -37,7 +50,9 @@ export function BoardColumn({
     });
     setIsCreateOpen(false);
   };
+
   const colorVar = `var(--${COLOR_MAP[id]})`;
+  const cardIds = cards.map((card) => card.id);
 
   return (
     <div
@@ -59,10 +74,20 @@ export function BoardColumn({
       <div className="relative flex flex-1 flex-col gap-6 overflow-hidden">
         <div className="flex-1 -mx-6 px-6 overflow-hidden">
           <ScrollArea className="h-full">
-            <div className="flex flex-col gap-4 py-2 ">
-              {cards.map((c, i) => (
-                <TaskCard key={i} card={c} />
-              ))}
+            <div
+              ref={setNodeRef}
+              className={`flex flex-col gap-4 py-2 min-h-25 transition-colors ${
+                isOver ? 'bg-accent/10 rounded-lg' : ''
+              }`}
+            >
+              <SortableContext
+                items={cardIds}
+                strategy={verticalListSortingStrategy}
+              >
+                {cards.map((card) => (
+                  <DraggableCard key={card.id} card={card} />
+                ))}
+              </SortableContext>
             </div>
           </ScrollArea>
         </div>

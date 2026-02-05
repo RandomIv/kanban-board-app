@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { ArrowRight, Trash2, Home } from 'lucide-react';
+import { ArrowRight, Trash2, Home, Copy, Check } from 'lucide-react';
 import { BoardDeleteAlert } from './board-delete-alert';
 import { useDeleteBoard } from '@/hooks/use-board';
 
@@ -15,11 +15,22 @@ interface BoardHeaderProps {
 export function BoardHeader({ boardId: activeBoardId }: BoardHeaderProps) {
   const router = useRouter();
   const [navBoardId, setNavBoardId] = useState('');
+  const [copied, setCopied] = useState(false);
   const deleteBoardMutation = useDeleteBoard();
 
   const handleOpenBoard = () => {
     if (navBoardId.trim()) {
       router.push(`/board/${navBoardId}`);
+    }
+  };
+
+  const handleCopyBoardId = async () => {
+    try {
+      await navigator.clipboard.writeText(activeBoardId);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch (error) {
+      console.error('Failed to copy board ID:', error);
     }
   };
 
@@ -42,6 +53,25 @@ export function BoardHeader({ boardId: activeBoardId }: BoardHeaderProps) {
         <Home className="h-6 w-6" />
       </Button>
 
+      <Button
+        size="lg"
+        variant="outline"
+        className="h-12 text-xl font-bold rounded-xl shadow-lg transition-all"
+        onClick={handleCopyBoardId}
+        title="Copy Board ID"
+      >
+        {copied ? (
+          <>
+            <Check className="h-6 w-6 mr-2" />
+            Copied!
+          </>
+        ) : (
+          <>
+            <Copy className="h-6 w-6 mr-2" />
+            Copy ID
+          </>
+        )}
+      </Button>
       <Input
         className="h-12 flex-1 border-border border-3 bg-primary text-lg"
         placeholder="Enter a board ID here..."

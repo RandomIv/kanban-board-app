@@ -22,6 +22,9 @@ export const useUpdateBoard = () => {
   return useMutation({
     mutationFn: ({ id, data }: { id: string; data: UpdateBoardDto }) =>
       boardService.update(id, data),
+    onMutate: async () => {
+      await queryClient.cancelQueries({ queryKey: ['board'] });
+    },
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ['board', data.id] });
     },
