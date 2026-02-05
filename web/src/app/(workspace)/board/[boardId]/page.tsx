@@ -76,14 +76,14 @@ export default function BoardPage({
   if (isLoading) {
     return (
       <div className="flex h-screen items-center justify-center bg-background text-foreground">
-        <div className="animate-pulse">Loading board...</div>
+        <div className="animate-pulse text-4xl">Loading board...</div>
       </div>
     );
   }
 
   if (isError || !board) {
     return (
-      <div className="flex h-screen items-center justify-center bg-background text-destructive">
+      <div className="flex h-screen items-center justify-center bg-background text-destructive text-4xl">
         {error?.message || 'Failed to load board.'}
       </div>
     );
