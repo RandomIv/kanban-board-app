@@ -42,13 +42,22 @@ export function BoardColumn({
     },
   });
 
-  const handleCreate = (data: { title: string; description?: string }) => {
-    createCardMutation.mutate({
-      ...data,
-      column: id,
-      boardId: boardId,
-    });
-    setIsCreateOpen(false);
+  const handleCreate = async (data: {
+    title: string;
+    description?: string;
+  }) => {
+    createCardMutation.mutate(
+      {
+        ...data,
+        column: id,
+        boardId: boardId,
+      },
+      {
+        onSuccess: () => {
+          setIsCreateOpen(false);
+        },
+      },
+    );
   };
 
   const colorVar = `var(--${COLOR_MAP[id]})`;

@@ -22,9 +22,18 @@ export function TaskCard({ card }: TaskCardProps) {
         ? 'chart-4'
         : 'chart-2'
   })`;
-  const handleUpdate = (data: { title: string; description?: string }) => {
-    updateCardMutation.mutate({ id: card.id, data });
-    setIsEditOpen(false);
+  const handleUpdate = async (data: {
+    title: string;
+    description?: string;
+  }) => {
+    updateCardMutation.mutate(
+      { id: card.id, data },
+      {
+        onSuccess: () => {
+          setIsEditOpen(false);
+        },
+      },
+    );
   };
 
   const handleDelete = () => {
