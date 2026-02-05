@@ -39,6 +39,10 @@ jobs:
         working-directory: ./api
         run: npm ci
 
+      - name: Generate Prisma Client
+        working-directory: ./api
+        run: npx prisma generate
+
       - name: Lint API
         working-directory: ./api
         run: npm run lint
@@ -47,9 +51,7 @@ jobs:
         working-directory: ./api
         env:
           DATABASE_URL: postgresql://user:password@localhost:5432/kanban
-        run: |
-          npx prisma generate
-          npx prisma migrate deploy
+        run: npx prisma migrate deploy
 
       - name: Run API Unit Tests
         working-directory: ./api
