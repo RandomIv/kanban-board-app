@@ -45,6 +45,7 @@ interface TaskDialogProps {
   onClose: () => void;
   initialData?: CardType;
   onSubmit: (data: TaskFormValues) => void;
+  isLoading?: boolean;
 }
 
 export function TaskDialog({
@@ -52,6 +53,7 @@ export function TaskDialog({
   onClose,
   initialData,
   onSubmit,
+  isLoading = false,
 }: TaskDialogProps) {
   const form = useForm<TaskFormValues>({
     resolver: zodResolver(formSchema),
@@ -177,15 +179,21 @@ export function TaskDialog({
               type="button"
               variant="outline"
               onClick={onClose}
+              disabled={isLoading}
               className="h-11 px-6 text-base font-semibold"
             >
               Cancel
             </Button>
             <Button
               type="submit"
+              disabled={isLoading}
               className="h-11 px-6 text-base font-semibold bg-chart-1 hover:bg-chart-1/90 text-primary shadow-lg hover:shadow-xl transition-all"
             >
-              {isEditing ? 'Save Changes' : 'Create Task'}
+              {isLoading
+                ? 'Saving...'
+                : isEditing
+                  ? 'Save Changes'
+                  : 'Create Task'}
             </Button>
           </DialogFooter>
         </form>

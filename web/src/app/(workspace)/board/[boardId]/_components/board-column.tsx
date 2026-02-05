@@ -2,9 +2,8 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Button } from '@/components/ui/button';
 import { Plus } from 'lucide-react';
 import { CardType, Column } from '@/types/card.types';
-import React, { useState } from 'react';
-import { TaskDialog } from '@/app/(workspace)/board/[boardId]/_components/task-dialog';
-import { useCreateCard } from '@/hooks/use-card';
+import React from 'react';
+import { useTaskModalStore } from '@/store/task-modal.store';
 import { useDroppable } from '@dnd-kit/core';
 import {
   SortableContext,
@@ -25,14 +24,8 @@ const COLOR_MAP: Record<Column, string> = {
   DONE: 'chart-2',
 };
 
-export function BoardColumn({
-  id,
-  title,
-  cards = [],
-  boardId,
-}: BoardColumnProps) {
-  const [isCreateOpen, setIsCreateOpen] = useState(false);
-  const createCardMutation = useCreateCard();
+export function BoardColumn({ id, title, cards = [] }: BoardColumnProps) {
+  const onOpenCreate = useTaskModalStore((state) => state.onOpenCreate);
 
   const { setNodeRef, isOver } = useDroppable({
     id,
@@ -41,24 +34,6 @@ export function BoardColumn({
       columnId: id,
     },
   });
-
-  const handleCreate = async (data: {
-    title: string;
-    description?: string;
-  }) => {
-    createCardMutation.mutate(
-      {
-        ...data,
-        column: id,
-        boardId: boardId,
-      },
-      {
-        onSuccess: () => {
-          setIsCreateOpen(false);
-        },
-      },
-    );
-  };
 
   const colorVar = `var(--${COLOR_MAP[id]})`;
   const cardIds = cards.map((card) => card.id);
@@ -104,16 +79,11 @@ export function BoardColumn({
         <Button
           variant="ghost"
           className="h-14 w-full border-2 border-dashed border-(--col)/40 bg-transparent text-base text-muted-foreground hover:border-(--col) hover:bg-(--col)/10 hover:text-(--col) hover:cursor-pointer"
-          onClick={() => setIsCreateOpen(true)}
+          onClick={() => onOpenCreate(id)}
         >
           <Plus className="mr-2 h-5 w-5" /> Add Task
         </Button>
       </div>
-      <TaskDialog
-        isOpen={isCreateOpen}
-        onClose={() => setIsCreateOpen(false)}
-        onSubmit={handleCreate}
-      />
     </div>
   );
 }

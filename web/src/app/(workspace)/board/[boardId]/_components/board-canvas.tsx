@@ -15,9 +15,12 @@ import {
 
 import { BoardColumn } from './board-column';
 import { TaskCard } from './task-card';
+import { TaskDialog } from './task-dialog';
 
 import { useDragAndDrop } from '@/hooks/use-drag-drop';
+import { useCreateCard, useUpdateCard } from '@/hooks/use-card';
 import { useBoardStore } from '@/store/board.store';
+import { useTaskModalStore } from '@/store/task-modal.store';
 import { CardType } from '@/types/card.types';
 import { BoardType } from '@/types/board.types';
 
@@ -34,6 +37,16 @@ export function BoardCanvas({
 }: BoardCanvasProps) {
   const { cards, setCards } = useBoardStore();
   const { handleDragEnd, handleDragOver } = useDragAndDrop();
+
+  const {
+    isOpen,
+    mode,
+    activeCard: modalActiveCard,
+    targetColumn,
+    onClose,
+  } = useTaskModalStore();
+  const createCardMutation = useCreateCard();
+  const updateCardMutation = useUpdateCard();
 
   const isMutating = useIsMutating();
   const [isDragging, setIsDragging] = useState(false);
@@ -72,6 +85,31 @@ export function BoardCanvas({
     }, 50);
   };
 
+  const handleModalSubmit = (data: { title: string; description?: string }) => {
+    if (mode === 'CREATE' && targetColumn) {
+      createCardMutation.mutate(
+        {
+          ...data,
+          column: targetColumn,
+          boardId,
+        },
+        {
+          onSuccess: () => onClose(),
+        },
+      );
+    } else if (mode === 'EDIT' && modalActiveCard) {
+      updateCardMutation.mutate(
+        { id: modalActiveCard.id, data },
+        {
+          onSuccess: () => onClose(),
+        },
+      );
+    }
+  };
+
+  const isModalLoading =
+    createCardMutation.isPending || updateCardMutation.isPending;
+
   return (
     <DndContext
       sensors={sensors}
@@ -108,6 +146,14 @@ export function BoardCanvas({
           </div>
         ) : null}
       </DragOverlay>
+
+      <TaskDialog
+        isOpen={isOpen}
+        onClose={onClose}
+        initialData={modalActiveCard ?? undefined}
+        onSubmit={handleModalSubmit}
+        isLoading={isModalLoading}
+      />
     </DndContext>
   );
 }
