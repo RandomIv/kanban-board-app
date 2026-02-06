@@ -61,8 +61,8 @@ docker compose up --build
 
 4. **Access the App:**
 
-* **Frontend:** [http://localhost:3000](https://www.google.com/search?q=http://localhost:3000)
-* **API:** [http://localhost:5000](https://www.google.com/search?q=http://localhost:5000)
+* **Frontend:** [http://localhost:3000](http://localhost:3000)
+* **API:** [http://localhost:5000](http://localhost:5000)
 
 *Note: Database migrations are applied automatically on container startup.*
 
