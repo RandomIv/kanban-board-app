@@ -39,7 +39,7 @@ You can run the project in two ways: using **Docker** (recommended) or **Manuall
 
 1. **Clone the repository:**
 ```bash
-git clone [https://github.com/RandomIv/kanban-board-app.git](https://github.com/RandomIv/kanban-board-app.git)
+git clone https://github.com/RandomIv/kanban-board-app.git
 cd kanban-board-app
 
 ```
@@ -77,7 +77,7 @@ Use this if you want to run the app locally but don't want to install PostgreSQL
 **Clone the repository:**
 
 ```bash
-git clone [https://github.com/RandomIv/kanban-board-app.git](https://github.com/RandomIv/kanban-board-app.git)
+git clone https://github.com/RandomIv/kanban-board-app.git
 cd kanban-board-app
 
 ```
