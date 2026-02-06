@@ -39,7 +39,7 @@ You can run the project in two ways: using **Docker** (recommended) or **Manuall
 
 1. **Clone the repository:**
 ```bash
-git clone https://github.com/RandomIv/kanban-board-app.git
+git clone [https://github.com/RandomIv/kanban-board-app.git](https://github.com/RandomIv/kanban-board-app.git)
 cd kanban-board-app
 
 ```
@@ -77,7 +77,7 @@ Use this if you want to run the app locally but don't want to install PostgreSQL
 **Clone the repository:**
 
 ```bash
-git clone https://github.com/RandomIv/kanban-board-app.git
+git clone [https://github.com/RandomIv/kanban-board-app.git](https://github.com/RandomIv/kanban-board-app.git)
 cd kanban-board-app
 
 ```
@@ -171,7 +171,7 @@ The project is configured for continuous deployment. Every push to the `main` br
 
 ### Hosting Architecture:
 
-* **Database:** PostgreSQL Hosted on Render
+* **Database:** PostgreSQL Hosted on Render.
 * **Backend:** Dockerized NestJS Service (Render).
 * **Frontend:** Vercel Edge Network.
 
@@ -182,6 +182,15 @@ The project is configured for continuous deployment. Every push to the `main` br
 ### Option 1: Inside Docker (Easiest)
 
 You can run tests directly inside the containers without installing dependencies locally.
+
+**Important:** First, install browser binaries inside the container (run once):
+
+```bash
+docker exec -it kanban_web npx playwright install --with-deps
+
+```
+
+Then run the tests:
 
 ```bash
 # Backend: Unit Tests
@@ -199,6 +208,16 @@ docker exec -it kanban_web npx playwright test
 ```
 
 ### Option 2: Local Environment
+
+If you are running Playwright for the first time, install the required browsers:
+
+```bash
+cd web
+sudo npx playwright install --with-deps
+
+```
+
+Then run the tests:
 
 ```bash
 # Backend
