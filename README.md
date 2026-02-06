@@ -179,18 +179,10 @@ The project is configured for continuous deployment. Every push to the `main` br
 
 ## 🧪 Running Tests
 
-### Option 1: Inside Docker (Easiest)
+### Option 1: Inside Docker (Unit Tests)
 
-You can run tests directly inside the containers without installing dependencies locally.
-
-**Important:** First, install browser binaries inside the container (run once):
-
-```bash
-docker exec -it kanban_web npx playwright install --with-deps
-
-```
-
-Then run the tests:
+You can run Unit and Integration tests directly inside the containers.
+*(Note: For E2E Frontend tests with Playwright, please use the Local Environment option below due to browser dependencies, but its still works with ci pipeline)*.
 
 ```bash
 # Backend: Unit Tests
@@ -202,18 +194,15 @@ docker exec -it kanban_api npm run test:e2e
 # Frontend: Unit Tests
 docker exec -it kanban_web npm test
 
-# Frontend: E2E Tests (Playwright)
-docker exec -it kanban_web npx playwright test
-
 ```
 
-### Option 2: Local Environment
+### Option 2: Local Environment (Full Suite)
 
 If you are running Playwright for the first time, install the required browsers:
 
 ```bash
 cd web
-sudo npx playwright install --with-deps
+npx playwright install --with-deps
 
 ```
 
@@ -246,3 +235,5 @@ npx playwright test # E2E Tests
 
 * **Kanban Logic:** Create columns, add tasks, move them around.
 * **Optimistic UI:** Instant feedback when dragging cards, powered by React Query.
+
+
