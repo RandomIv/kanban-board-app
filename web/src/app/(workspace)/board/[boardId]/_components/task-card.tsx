@@ -40,10 +40,10 @@ export function TaskCard({ card }: TaskCardProps) {
       />
 
       <div className="flex flex-col gap-2 pt-2">
-        <h4 className="text-base font-semibold text-card-foreground leading-tight">
+        <h4 className="text-base font-semibold text-card-foreground leading-tight break-all">
           {card.title}
         </h4>
-        <p className="text-sm text-muted-foreground line-clamp-3">
+        <p className="text-sm text-muted-foreground break-all">
           {card.description || 'No description provided...'}
         </p>
       </div>
