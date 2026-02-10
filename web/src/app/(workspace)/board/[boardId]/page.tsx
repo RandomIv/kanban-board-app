@@ -52,11 +52,11 @@ export default function BoardPage({
   }
 
   return (
-    <div className="flex h-screen flex-col bg-background text-foreground">
+    <div className="flex h-screen flex-col bg-background text-foreground overflow-hidden">
       <BoardHeader boardId={activeBoardId} />
       <BoardTitle boardId={activeBoardId} initialTitle={board.name} />
 
-      <main className="flex-1 overflow-x-auto overflow-y-hidden flex justify-center">
+      <main className="flex-1 overflow-x-auto overflow-y-hidden flex">
         <BoardCanvas
           boardId={activeBoardId}
           initialBoardData={board}

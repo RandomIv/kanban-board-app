@@ -118,7 +118,7 @@ export function BoardCanvas({
       onDragEnd={onDragEndWrapper}
       onDragOver={handleDragOver}
     >
-      <div className="flex h-full min-w-max gap-6 p-6">
+      <div className="flex h-full min-w-max gap-6 p-6 mx-auto w-fit">
         <BoardColumn
           id="TODO"
           title="To Do"
