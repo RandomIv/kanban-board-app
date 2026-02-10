@@ -10,7 +10,7 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-  AlertDialogTrigger, // Import Trigger
+  AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
 import { AlertTriangle } from 'lucide-react';
 import React from 'react';
