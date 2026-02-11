@@ -1,11 +1,11 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { INestApplication, ValidationPipe } from '@nestjs/common';
+import { INestApplication } from '@nestjs/common';
 import request from 'supertest';
 import { Server } from 'http';
 import { Board, Card } from '../src/generated/prisma/client';
 import { AppModule } from '../src/app.module';
 import { PrismaService } from '../src/prisma/prisma.service';
-import { PrismaExceptionFilter } from '../src/common/filters/prisma-client-exception.filter';
+import { setupApp } from '../src/setup-app';
 
 type BoardWithCards = Board & { cards: Card[] };
 
@@ -21,14 +21,9 @@ describe('BoardController (e2e)', () => {
     }).compile();
 
     app = moduleFixture.createNestApplication();
-    app.useGlobalPipes(
-      new ValidationPipe({
-        transform: true,
-        whitelist: true,
-        forbidNonWhitelisted: true,
-      }),
-    );
-    app.useGlobalFilters(new PrismaExceptionFilter());
+
+    setupApp(app);
+
     await app.init();
 
     prisma = app.get<PrismaService>(PrismaService);
