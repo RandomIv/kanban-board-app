@@ -1,11 +1,11 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { INestApplication, ValidationPipe } from '@nestjs/common';
+import { INestApplication } from '@nestjs/common';
 import request from 'supertest';
 import { Server } from 'http';
 import { Card, Column } from '../src/generated/prisma/client';
 import { AppModule } from '../src/app.module';
 import { PrismaService } from '../src/prisma/prisma.service';
-import { PrismaExceptionFilter } from '../src/common/filters/prisma-client-exception.filter';
+import { setupApp } from '../src/setup-app';
 
 describe('CardController (e2e)', () => {
   let app: INestApplication;
@@ -21,14 +21,7 @@ describe('CardController (e2e)', () => {
     }).compile();
 
     app = moduleFixture.createNestApplication();
-    app.useGlobalPipes(
-      new ValidationPipe({
-        transform: true,
-        whitelist: true,
-        forbidNonWhitelisted: true,
-      }),
-    );
-    app.useGlobalFilters(new PrismaExceptionFilter());
+    setupApp(app);
     await app.init();
 
     prisma = app.get<PrismaService>(PrismaService);
@@ -49,7 +42,7 @@ describe('CardController (e2e)', () => {
     await prisma.$disconnect();
   });
 
-  it('/cards (POST)', async () => {
+  it('/api/cards (POST)', async () => {
     const createDto = {
       title: 'E2E Card',
       column: 'TODO' as Column,
@@ -57,7 +50,7 @@ describe('CardController (e2e)', () => {
     };
 
     const response = await request(httpServer)
-      .post('/cards')
+      .post('/api/cards')
       .send(createDto)
       .expect(201);
 
@@ -71,9 +64,9 @@ describe('CardController (e2e)', () => {
     cardId = body.id;
   });
 
-  it('/cards/:id (PATCH)', async () => {
+  it('/api/cards/:id (PATCH)', async () => {
     const response = await request(httpServer)
-      .patch(`/cards/${cardId}`)
+      .patch(`/api/cards/${cardId}`)
       .send({ title: 'Updated Card Title' })
       .expect(200);
 
@@ -81,23 +74,23 @@ describe('CardController (e2e)', () => {
     expect(body.title).toBe('Updated Card Title');
   });
 
-  it('/cards/:id (DELETE)', async () => {
-    await request(httpServer).delete(`/cards/${cardId}`).expect(200);
+  it('/api/cards/:id (DELETE)', async () => {
+    await request(httpServer).delete(`/api/cards/${cardId}`).expect(200);
 
     const check = await prisma.card.findUnique({ where: { id: cardId } });
     expect(check).toBeNull();
   });
 
-  it('/cards (POST) - validation fail (missing boardId)', async () => {
+  it('/api/cards (POST) - validation fail (missing boardId)', async () => {
     await request(httpServer)
-      .post('/cards')
+      .post('/api/cards')
       .send({ title: 'Orphan Card', column: 'TODO' })
       .expect(400);
   });
 
-  it('/cards (POST) - validation fail (invalid column)', async () => {
+  it('/api/cards (POST) - validation fail (invalid column)', async () => {
     await request(httpServer)
-      .post('/cards')
+      .post('/api/cards')
       .send({
         title: 'Bad Column Card',
         boardId,
@@ -106,9 +99,9 @@ describe('CardController (e2e)', () => {
       .expect(400);
   });
 
-  it('/cards/:id (PATCH) - not found', async () => {
+  it('/api/cards/:id (PATCH) - not found', async () => {
     await request(httpServer)
-      .patch('/cards/00000000-0000-0000-0000-000000000000')
+      .patch('/api/cards/00000000-0000-0000-0000-000000000000')
       .send({ title: 'Ghost' })
       .expect(404);
   });
